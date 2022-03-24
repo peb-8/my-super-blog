@@ -1,0 +1,6 @@
+django
+django-rest-framework
+celery[redis]
+redis
+psycopg2-binary
+gunicorn
