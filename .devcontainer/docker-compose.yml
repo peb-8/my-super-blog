@@ -41,20 +41,20 @@ services:
     image: redis:alpine
     network_mode: service:app
   
-  celery_worker:
-    restart: always
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: django_celery_example_celery_worker
-    command: /start-celeryworker
-    volumes:
-      - .:/app
-    env_file:
-      - ./.env/.dev-sample
-    depends_on:
-      - redis
-      - db
+  # celery_worker:
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/local/django/Dockerfile
+  #   image: django_celery_example_celery_worker
+  #   command: /start-celeryworker
+  #   volumes:
+  #     - .:/app
+  #   env_file:
+  #     - ./.env/.dev-sample
+  #   depends_on:
+  #     - redis
+  #     - db
 
   # celery:
   #   restart: always
