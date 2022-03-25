@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.models import User
 from api.models import Post, Journey
 from datetime import datetime
+from django.utils import timezone
 
 
 class Command(BaseCommand):
@@ -21,8 +22,9 @@ class Command(BaseCommand):
 
     @staticmethod
     def set_created_at(item_data):
-        item_data["created_at"] = datetime.fromisoformat(
-            item_data["created_at"])
+        item_data["created_at"] = timezone.make_aware(
+            datetime.fromisoformat(
+                item_data["created_at"]))
 
     def handle(self, *model_labels, **options):
         with open("./sample_data.json") as json_file:
