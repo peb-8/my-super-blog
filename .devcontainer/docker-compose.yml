@@ -41,37 +41,23 @@ services:
     image: redis:alpine
     network_mode: service:app
   
-  # celery_worker:
-  #   restart: always
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/local/django/Dockerfile
-  #   image: django_celery_example_celery_worker
-  #   command: /start-celeryworker
-  #   volumes:
-  #     - .:/app
-  #   env_file:
-  #     - ./.env/.dev-sample
-  #   depends_on:
-  #     - redis
-  #     - db
-
-  # celery:
-  #   restart: always
-  #   build:
-  #     context: .
-  #   command: celery -A app worker -l info
-  #   network_mode: service:app
-  #   volumes:
-  #     - ./app:/app
-  #   environment:
-  #     - DB_HOST=127.0.0.1
-  #     - DB_NAME=postgres
-  #     - DB_USER=postgres
-  #     - DB_PASS=postgres
-  #   depends_on:
-  #     - db
-  #     - redis
+  celery:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: celery -A app worker -l info
+    volumes:
+      - ..:/workspace:cached
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
+    depends_on:
+      - db
+      - redis
+      - app
+    network_mode: service:app
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
