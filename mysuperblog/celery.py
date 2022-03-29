@@ -3,6 +3,6 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysuperblog.settings')
 
-app = Celery('mysuperblog')
+app = Celery('mysuperblog', backend='redis')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()

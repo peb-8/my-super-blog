@@ -2,8 +2,6 @@ version: '3.8'
 
 services:
   app:
-    # networks:
-    #   - mynetwork
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -19,8 +17,6 @@ services:
       - 8000:8000
 
   db:
-    # networks:
-    #   - mynetwork
     image: postgres:latest
     restart: unless-stopped
     volumes:
@@ -31,15 +27,11 @@ services:
       POSTGRES_PASSWORD: postgres
 
   redis:
-    # networks:
-    #   - mynetwork
     image: redis:alpine
     ports:
       - 6379:6379
   
   celery:
-    # networks:
-    #   - mynetwork
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -58,14 +50,17 @@ services:
     command: celery -A mysuperblog worker -l info
 
   flower:
-    image: mher/flower
-    # networks:
-    #   - mynetwork
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/1
-      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
       - FLOWER_PORT=5566
-    command: "celery flower --port=5566"
+    working_dir: /workspace
+    command: "celery -A mysuperblog flower"
     ports:
       - 5566:5566
     depends_on:
@@ -74,6 +69,3 @@ services:
 
 volumes:
   postgres-data:
-
-# networks:
-#   mynetwork:

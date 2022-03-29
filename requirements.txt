@@ -2,5 +2,5 @@ django
 django-rest-framework
 celery[redis]
 redis
+flower
 psycopg2-binary
-gunicorn
